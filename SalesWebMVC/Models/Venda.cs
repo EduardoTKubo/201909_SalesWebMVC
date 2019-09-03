@@ -9,8 +9,11 @@ namespace SalesWebMVC.Models
         public DateTime DtVenda { get; set; }
         public double Valor { get; set; }
         public StatusDaVenda Status { get; set; }
+
         // associacao de venda com vendedor
         public Vendedor Vendedor { get; set; }
+
+
 
         // construtor sem argumentos
         public Venda()

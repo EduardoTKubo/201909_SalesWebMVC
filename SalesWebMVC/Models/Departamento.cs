@@ -8,8 +8,11 @@ namespace SalesWebMVC.Models
     {
         public int Id { get; set; }
         public string Nome { get; set; }
+
         // associacao de Departamento com Vendedor
         public ICollection<Vendedor> Vendedores { get; set; } = new List<Vendedor>();
+
+
 
         // construtor sem argumento
         public Departamento()

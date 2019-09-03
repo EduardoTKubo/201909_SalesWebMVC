@@ -12,10 +12,13 @@ namespace SalesWebMVC.Models
         public string Email { get; set; }
         public DateTime DtNasc { get; set; }
         public double SalarioBase { get; set; }
+
         // associacao de vendedor com departamento
         public Departamento Departamento { get; set; }
         // associacao de vendedor com vendas
         public ICollection<Venda> Vendas { get; set; } = new List<Venda>();
+
+
 
         // construtor sem argumento
         public Vendedor()
