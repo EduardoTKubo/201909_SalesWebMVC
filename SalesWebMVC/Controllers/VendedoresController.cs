@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SalesWebMVC.Models;
+using SalesWebMVC.Models.ViewModels;
 using SalesWebMVC.Services;
 
 namespace SalesWebMVC.Controllers
@@ -13,10 +14,15 @@ namespace SalesWebMVC.Controllers
         // declarando uma dependencia para o VendedorService
         private readonly VendedorService _vendedorService;
 
+        // declarando uma dependencia para o DepartamentoService
+        private readonly DepartamentoService _departamentoService;
+
+
         // construtor para injetar a dependencia
-        public VendedoresController (VendedorService vendedorService)
+        public VendedoresController (VendedorService vendedorService ,DepartamentoService departamentoService )
         {
             _vendedorService = vendedorService;
+            _departamentoService = departamentoService;
         }
 
 
@@ -28,8 +34,12 @@ namespace SalesWebMVC.Controllers
 
 
         public IActionResult Create()
-        {            
-            return View();
+        {
+            // carregar os todos os departamentos
+            var departamentos = _departamentoService.FindAll();
+            // instanciar um objeto do nosso viewModel
+            var viewModel = new VendedorFormViewModel { Departamentos = departamentos };
+            return View(viewModel);
         }
 
 
