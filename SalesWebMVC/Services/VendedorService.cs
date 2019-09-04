@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace SalesWebMVC.Services
 {
@@ -38,7 +39,10 @@ namespace SalesWebMVC.Services
         // busca o nome do vendedor informando o Id do vendedor
         public Vendedor FindByID(int id)
         {
-            return _context.Vendedor.FirstOrDefault(obj => obj.Id == id);
+            //return _context.Vendedor.FirstOrDefault(obj => obj.Id == id);
+
+            // fazendo um join com a tabela Departamento ( eager loading )
+            return _context.Vendedor.Include(obj => obj.Departamento).FirstOrDefault(obj => obj.Id == id);
         }
 
 
