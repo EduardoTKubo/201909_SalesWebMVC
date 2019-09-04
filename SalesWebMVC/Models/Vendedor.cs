@@ -15,6 +15,10 @@ namespace SalesWebMVC.Models
 
         // associacao de vendedor com departamento
         public Departamento Departamento { get; set; }
+
+        // chave estrangeira - foreign key 
+        public int DepartamentoId { get; set; }
+
         // associacao de vendedor com vendas
         public ICollection<Venda> Vendas { get; set; } = new List<Venda>();
 
