@@ -9,16 +9,24 @@ namespace SalesWebMVC.Models
     public class Vendedor
     {
         public int Id { get; set; }
-        public string Nome { get; set; }
 
+        [Required(ErrorMessage = "{0} requerido")]              // torna o campo Obrigatório 
+        [StringLength(60, MinimumLength = 5 ,ErrorMessage = "{0} tamanho do nome entre {2} e {1} caracteres")]
+        public string Nome { get; set; }                        // no caso {0} = nome ,{1} = tam max ,{2} tam min
+
+        [Required(ErrorMessage = "{0} requerido")]              // torna o campo Obrigatório 
+        [EmailAddress(ErrorMessage = "Enter a valid email")]    // verifica se o email é valido
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }
 
+        [Required(ErrorMessage = "{0} requerido")]     // torna o campo Obrigatório 
         [Display(Name = "Dt Nasc")]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:dd/MM/yyyy}")]
         public DateTime DtNasc { get; set; }
-        
+
+        [Required(ErrorMessage = "{0} requerido")]     // torna o campo Obrigatório ]
+        [Range(100.0, 50000.0, ErrorMessage = "{0} must be from {1} to {2}")]
         [Display(Name = "Salário Base")]
         [DisplayFormat(DataFormatString ="{0:F2}")]
         public double SalarioBase { get; set; }
