@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -59,13 +60,13 @@ namespace SalesWebMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error) ,new { message = "Id não fornecido" } );
             }
 
             var obj = _vendedorService.FindByID(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(obj);
@@ -86,13 +87,13 @@ namespace SalesWebMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não informado" });
             }
 
             var obj = _vendedorService.FindByID(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             return View(obj);
@@ -103,13 +104,13 @@ namespace SalesWebMVC.Controllers
         {
             if (id == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
             var obj = _vendedorService.FindByID(id.Value);
             if (obj == null)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
             }
 
             // abrir a tela de edição
@@ -128,7 +129,7 @@ namespace SalesWebMVC.Controllers
         {
             if (id != vendedor.Id)
             {
-                return BadRequest();
+                return RedirectToAction(nameof(Error), new { message = "Id não corresponde" });
             }
             try
             {
@@ -137,15 +138,29 @@ namespace SalesWebMVC.Controllers
                 // redirecionar para a pag inicial do crud : Index
                 return RedirectToAction(nameof(Index));
             }
-            catch (NotFoundException)
+            //catch (NotFoundException e)
+            //{
+            //    return RedirectToAction(nameof(Error), new { message = e.Message });
+            //}
+            //catch (DbConcurrencyException e)
+            //{
+            //    return RedirectToAction(nameof(Error), new { message = e.Message });
+            //}
+            catch (ApplicationException e)
             {
-                return NotFound();
+                return RedirectToAction(nameof(Error), new { message = e.Message });
             }
-            catch (DbConcurrencyException)
-            {
-                return BadRequest();
-            }
+        }
 
+
+        public IActionResult Error(string message)
+        {
+            var viewModel = new ErrorViewModel
+            {
+                Message = message,
+                RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
+            };
+            return View(viewModel);
         }
 
     }
