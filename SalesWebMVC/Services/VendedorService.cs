@@ -16,7 +16,7 @@ namespace SalesWebMVC.Services
 
 
         // contrutor para que a injecao de dependencia possa ocorrer
-        public VendedorService (SalesWebMVCContext context)
+        public VendedorService(SalesWebMVCContext context)
         {
             _context = context;
         }
@@ -51,9 +51,16 @@ namespace SalesWebMVC.Services
         // remover o vendedor ( id )
         public async Task RemoveAsync(int id)
         {
-            var obj = await _context.Vendedor.FindAsync(id);
-            _context.Vendedor.Remove(obj);
-            await _context.SaveChangesAsync();
+            try
+            {
+                var obj = await _context.Vendedor.FindAsync(id);
+                _context.Vendedor.Remove(obj);
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException e)
+            {
+                throw new IntegrityException(e.Message);
+            }
         }
 
 
@@ -75,11 +82,11 @@ namespace SalesWebMVC.Services
                 _context.Update(obj);
                 await _context.SaveChangesAsync();
             }
-            catch(DbConcurrencyException e)
+            catch (DbConcurrencyException e)
             {
                 throw new DbConcurrencyException(e.Message);
             }
-            
+
 
         }
 
