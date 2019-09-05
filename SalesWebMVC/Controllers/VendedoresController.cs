@@ -29,17 +29,17 @@ namespace SalesWebMVC.Controllers
         }
 
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var list = _vendedorService.FindAll();
+            var list = await _vendedorService.FindAllAsync();
             return View(list);
         }
 
 
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
             // carregar os todos os departamentos
-            var departamentos = _departamentoService.FindAll();
+            var departamentos = await _departamentoService.FindAllAsync();
             // instanciar um objeto do nosso viewModel
             var viewModel = new VendedorFormViewModel { Departamentos = departamentos };
             return View(viewModel);
@@ -48,30 +48,30 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Vendedor vendedor)
+        public async Task<IActionResult> Create(Vendedor vendedor)
         {
             // testa se o modelo foi validado, ie, se o formulario foi preenchido integralmente
             if (!ModelState.IsValid)
             {
-                var departamentos = _departamentoService.FindAll();
+                var departamentos = await _departamentoService.FindAllAsync();
                 var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
 
-            _vendedorService.Insert(vendedor);
+            await _vendedorService.InsertAsync(vendedor);
             // redirecionar para a pag inicial do crud : Index
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Delete(int? id)
+        public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error) ,new { message = "Id não fornecido" } );
             }
 
-            var obj = _vendedorService.FindByID(id.Value);
+            var obj = await _vendedorService.FindByIDAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
@@ -83,22 +83,22 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
-            _vendedorService.Remove(id);
+            await _vendedorService.RemoveAsync(id);
             // redirecionar para a pag inicial do crud : Index
             return RedirectToAction(nameof(Index));
         }
 
 
-        public IActionResult Details(int? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não informado" });
             }
 
-            var obj = _vendedorService.FindByID(id.Value);
+            var obj = await _vendedorService.FindByIDAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
@@ -108,14 +108,14 @@ namespace SalesWebMVC.Controllers
         }
 
 
-        public IActionResult Edit(int? id)
+        public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não fornecido" });
             }
 
-            var obj = _vendedorService.FindByID(id.Value);
+            var obj = await _vendedorService.FindByIDAsync(id.Value);
             if (obj == null)
             {
                 return RedirectToAction(nameof(Error), new { message = "Id não encontrado" });
@@ -123,7 +123,7 @@ namespace SalesWebMVC.Controllers
 
             // abrir a tela de edição
             // 1º carregar lista de deparmantos
-            List<Departamento> departamentos = _departamentoService.FindAll();
+            List<Departamento> departamentos = await _departamentoService.FindAllAsync();
 
             VendedorFormViewModel viewModel = new VendedorFormViewModel { Vendedor = obj, Departamentos = departamentos };
             return View(viewModel);
@@ -133,12 +133,12 @@ namespace SalesWebMVC.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Edit(int id, Vendedor vendedor)
+        public async Task<IActionResult> Edit(int id, Vendedor vendedor)
         {
             // testa se o modelo foi validado, ie, se o formulario foi preenchido integralmente
             if (!ModelState.IsValid)
             {
-                var departamentos = _departamentoService.FindAll();
+                var departamentos = await _departamentoService.FindAllAsync();
                 var viewModel = new VendedorFormViewModel { Vendedor = vendedor, Departamentos = departamentos };
                 return View(viewModel);
             }
@@ -150,7 +150,7 @@ namespace SalesWebMVC.Controllers
             try
             {
                 // update
-                _vendedorService.Update(vendedor);
+                await _vendedorService.UpdateAsync(vendedor);
                 // redirecionar para a pag inicial do crud : Index
                 return RedirectToAction(nameof(Index));
             }
