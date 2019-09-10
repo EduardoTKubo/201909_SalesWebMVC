@@ -1,12 +1,17 @@
 ﻿using System;
 using SalesWebMVC.Models.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace SalesWebMVC.Models
 {
     public class Venda
     {
         public int Id { get; set; }
+
+        [DisplayFormat(DataFormatString ="{0:dd/MM/yyyy}")]
         public DateTime DtVenda { get; set; }
+
+        [DisplayFormat(DataFormatString ="{0:F2}")]
         public double Valor { get; set; }
         public StatusDaVenda Status { get; set; }
 

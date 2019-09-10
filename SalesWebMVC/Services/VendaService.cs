@@ -40,5 +40,30 @@ namespace SalesWebMVC.Services
                 .OrderByDescending(x => x.DtVenda)
                 .ToListAsync();
         }
+
+
+
+        public async Task<List<IGrouping<Departamento,Venda>>> FindByDateGroupingAsync(DateTime? minDate, DateTime? maxDate)
+        {
+            var result = from obj in _context.Venda select obj;
+            if (minDate.HasValue)
+            {
+                // se a data minima foi informada 
+                result = result.Where(x => x.DtVenda >= minDate.Value);
+            }
+            if (minDate.HasValue)
+            {
+                // se a data maxima foi informada 
+                result = result.Where(x => x.DtVenda <= maxDate.Value);
+            }
+
+            return await result
+                .Include(x => x.Vendedor)               // join com tabela Vendedor
+                .Include(x => x.Vendedor.Departamento)  // join com tabela Departamento
+                .OrderByDescending(x => x.DtVenda)
+                .GroupBy(x => x.Vendedor.Departamento)  // agrupando
+                .ToListAsync();
+        }
+
     }
 }
